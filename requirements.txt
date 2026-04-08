@@ -1,0 +1,4 @@
+django==5.2
+pillow
+python-decouple
+gunicorn

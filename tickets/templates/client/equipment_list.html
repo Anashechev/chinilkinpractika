@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Моя техника{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Моя техника</h2>
+        <div class="mb-3">
+            <a href="{% url 'tickets:link_equipment' %}" class="btn btn-success">Привязать существующую технику</a>
+        </div>
+        
+        {% if equipment %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Тип</th>
+                            <th>Модель</th>
+                            <th>Серийный номер</th>
+                            <th>Дата добавления</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipment %}
+                        <tr>
+                            <td>{{ item.get_type_display }}</td>
+                            <td>{{ item.model }}</td>
+                            <td>{{ item.serial_number|default:"-" }}</td>
+                            <td>{{ item.created_at|date:"d.m.Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                У вас пока нет добавленной техники. Вы можете привязать существующую технику по серийному номеру.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Заявки в работе{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Заявки в работе</h2>
+        
+        {% if tickets %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Клиент</th>
+                            <th>Техника</th>
+                            <th>Начата</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.id }}</td>
+                            <td>{{ ticket.title }}</td>
+                            <td>{{ ticket.client.full_name }}</td>
+                            <td>{{ ticket.equipment.model }}</td>
+                            <td>{{ ticket.updated_at|date:"d.m.Y" }}</td>
+                            <td>
+                                <a href="{% url 'tickets:complete_ticket' ticket.id %}" class="btn btn-sm btn-success">Завершить</a>
+                                <a href="{% url 'tickets:view_ticket' ticket.id %}" class="btn btn-sm btn-info">Просмотр</a>
+                                <a href="{% url 'tickets:add_comment' ticket.id %}" class="btn btn-sm btn-warning">Добавить комментарий</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                У вас пока нет заявок в работе.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Привязать технику{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Привязать технику по серийному номеру</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.serial_number.id_for_label }}" class="form-label">{{ form.serial_number.label }}</label>
+                {{ form.serial_number }}
+                {% if form.serial_number.errors %}
+                    <div class="text-danger">
+                        {{ form.serial_number.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Привязать технику</button>
+            <a href="{% url 'tickets:equipment_list' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

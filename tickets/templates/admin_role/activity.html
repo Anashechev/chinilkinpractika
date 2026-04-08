@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Активность в системе{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Активность в системе</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Последняя активность</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Дата и время</th>
+                                <th>Пользователь</th>
+                                <th>Действие</th>
+                                <th>Объект</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in recent_activities %}
+                            <tr>
+                                <td>{{ activity.timestamp|date:"d.m.Y H:i" }}</td>
+                                <td>{{ activity.user.username }}</td>
+                                <td>{{ activity.action }}</td>
+                                <td>{{ activity.object_repr }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Активность не найдена</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

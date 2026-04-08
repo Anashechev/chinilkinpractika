@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Панель клиента{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Панель клиента</h2>
+        <p class="lead">Добро пожаловать, {{ user.full_name }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Мои заявки</h5>
+                <p class="card-text flex-grow-1">Просмотр и управление вашими заявками на обслуживание.</p>
+                <a href="{% url 'tickets:client_tickets' %}" class="btn btn-primary mt-auto">Просмотр заявок</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Создать заявку</h5>
+                <p class="card-text flex-grow-1">Подать новую заявку на обслуживание техники.</p>
+                <a href="{% url 'tickets:create_ticket' %}" class="btn btn-success mt-auto">Создать заявку</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Моя техника</h5>
+                <p class="card-text flex-grow-1">Управление зарегистрированной техникой.</p>
+                <a href="{% url 'tickets:equipment_list' %}" class="btn btn-info mt-auto">Просмотр техники</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Последние уведомления</h5>
+            </div>
+            <div class="card-body">
+                <p>Здесь будут отображаться ваши последние уведомления.</p>
+                <a href="{% url 'tickets:notifications' %}" class="btn btn-outline-primary">Просмотреть все уведомления</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

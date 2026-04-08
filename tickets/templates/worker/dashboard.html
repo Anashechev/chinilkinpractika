@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Панель работника{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Панель работника</h2>
+        <p class="lead">Добро пожаловать, {{ user.full_name }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Назначенные заявки</h5>
+                <p class="card-text flex-grow-1">Просмотр назначенных вам заявок.</p>
+                <a href="{% url 'tickets:assigned_tickets' %}" class="btn btn-primary mt-auto">Просмотр назначенных заявок</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">В работе</h5>
+                <p class="card-text flex-grow-1">Просмотр заявок, над которыми вы работаете.</p>
+                <a href="{% url 'tickets:in_progress_tickets' %}" class="btn btn-warning mt-auto">Просмотр заявок в работе</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Завершенные заявки</h5>
+                <p class="card-text flex-grow-1">Просмотр завершенных вами заявок.</p>
+                <a href="{% url 'tickets:completed_tickets' %}" class="btn btn-success mt-auto">Просмотр завершенных заявок</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Ваша статистика</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h3>{{ assigned_tickets }}</h3>
+                            <p>Назначено</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h3>{{ in_progress_tickets }}</h3>
+                            <p>В работе</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h3>{{ completed_tickets }}</h3>
+                            <p>Завершено</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-center">
+                            <h3>{{ completion_rate }}%</h3>
+                            <p>Эффективность</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Последние заявки</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for ticket in recent_tickets %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <span>Заявка #{{ ticket.id }}: {{ ticket.title }}</span>
+                            <span class="badge bg-{% if ticket.current_status.name == 'ASSIGNED' %}primary{% elif ticket.current_status.name == 'IN_PROGRESS' %}warning{% elif ticket.current_status.name == 'COMPLETED' %}success{% else %}secondary{% endif %}">
+                                {{ ticket.current_status.name }}
+                            </span>
+                        </div>
+                        <small class="text-muted">{{ ticket.created_at|date:"d.m.Y H:i" }}</small>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">
+                        <div class="text-center">Нет заявок</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

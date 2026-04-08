@@ -1,0 +1,260 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-person-plus" style="font-size: 2.5rem; color: white;"></i>
+                </div>
+                <h3 class="mb-0">Создание аккаунта</h3>
+                <p class="mb-0 opacity-75">Присоединяйтесь к нам сегодня</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-person me-2"></i>{{ form.username.label }}
+                                </label>
+                                {{ form.username }}
+                                <div class="form-text">Введите уникальное имя пользователя</div>
+                                {% if form.username.errors %}
+                                    <div class="text-danger mt-2">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        {{ form.username.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-card-text me-2"></i>{{ form.full_name.label }} *
+                                </label>
+                                {{ form.full_name }}
+                                <div class="form-text">Фамилия, имя и отчество</div>
+                                {% if form.full_name.errors %}
+                                    <div class="text-danger mt-2">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        {{ form.full_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.contact.id_for_label }}" class="form-label fw-semibold">
+                            <i class="bi bi-envelope me-2"></i>{{ form.contact.label }} *
+                        </label>
+                        {{ form.contact }}
+                        <div class="form-text">Email или телефон для связи</div>
+                        {% if form.contact.errors %}
+                            <div class="text-danger mt-2">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                {{ form.contact.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    {% if form.role %}
+                    <div class="mb-3">
+                        <label for="{{ form.role.id_for_label }}" class="form-label fw-semibold">
+                            <i class="bi bi-briefcase me-2"></i>{{ form.role.label }}
+                        </label>
+                        {{ form.role }}
+                        <div class="form-text">Выберите вашу роль в системе</div>
+                        {% if form.role.errors %}
+                            <div class="text-danger mt-2">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                {{ form.role.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-lock me-2"></i>{{ form.password1.label }}
+                                </label>
+                                {{ form.password1 }}
+                                <div class="form-text">Минимум 8 символов</div>
+                                
+                                <!-- Индикатор сложности пароля -->
+                                <div class="password-strength mt-2">
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" id="passwordStrengthBar" role="progressbar" style="width: 0%;"></div>
+                                    </div>
+                                    <small class="text-muted" id="passwordStrengthText">Введите пароль для проверки сложности</small>
+                                </div>
+                                
+                                <!-- Требования к паролю -->
+                                <div class="password-requirements mt-2">
+                                    <small class="text-muted">
+                                        <div id="req-length"><i class="bi bi-circle"></i> Минимум 8 символов</div>
+                                        <div id="req-uppercase"><i class="bi bi-circle"></i> Хотя бы одна заглавная буква</div>
+                                        <div id="req-lowercase"><i class="bi bi-circle"></i> Хотя бы одна строчная буква</div>
+                                        <div id="req-number"><i class="bi bi-circle"></i> Хотя бы одна цифра</div>
+                                        <div id="req-special"><i class="bi bi-circle"></i> Хотя бы один спецсимвол (!@#$%^&*)</div>
+                                    </small>
+                                </div>
+                                
+                                {% if form.password1.errors %}
+                                    <div class="text-danger mt-2">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        {{ form.password1.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-4">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-lock-fill me-2"></i>{{ form.password2.label }}
+                                </label>
+                                {{ form.password2 }}
+                                <div class="form-text">Подтвердите введенный пароль</div>
+                                {% if form.password2.errors %}
+                                    <div class="text-danger mt-2">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        {{ form.password2.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Зарегистрироваться
+                        </button>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <span class="text-muted">Уже есть аккаунт?</span>
+                        <a href="{% url 'tickets:login' %}" class="btn btn-link ms-2">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>
+                            Войти
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function checkPasswordStrength(password) {
+    let strength = 0;
+    const requirements = {
+        length: password.length >= 8,
+        uppercase: /[A-ZА-ЯЁ]/.test(password),
+        lowercase: /[a-zа-яё]/.test(password),
+        number: /[0-9]/.test(password),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    
+    // Отладочная информация (можно удалить после проверки)
+    console.log('Password:', password);
+    console.log('Requirements:', requirements);
+    
+    // Обновляем иконки требований
+    updateRequirement('req-length', requirements.length);
+    updateRequirement('req-uppercase', requirements.uppercase);
+    updateRequirement('req-lowercase', requirements.lowercase);
+    updateRequirement('req-number', requirements.number);
+    updateRequirement('req-special', requirements.special);
+    
+    // Считаем выполненные требования
+    Object.values(requirements).forEach(met => {
+        if (met) strength++;
+    });
+    
+    // Дополнительные баллы за длину
+    if (password.length >= 12) strength++;
+    if (password.length >= 16) strength++;
+    
+    console.log('Strength:', strength);
+    return strength;
+}
+
+function updateRequirement(elementId, isMet) {
+    const element = document.getElementById(elementId);
+    const icon = element.querySelector('i');
+    
+    if (isMet) {
+        icon.className = 'bi bi-check-circle-fill text-success';
+        element.style.color = '#28a745';
+    } else {
+        icon.className = 'bi bi-circle';
+        element.style.color = '#6c757d';
+    }
+}
+
+function updatePasswordStrengthUI(strength) {
+    const progressBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    
+    // Удаляем все классы цветов
+    progressBar.className = 'progress-bar';
+    
+    if (strength === 0) {
+        progressBar.style.width = '0%';
+        strengthText.textContent = 'Введите пароль для проверки сложности';
+        strengthText.className = 'text-muted';
+    } else if (strength <= 2) {
+        progressBar.style.width = '20%';
+        progressBar.classList.add('bg-danger');
+        strengthText.textContent = 'Очень слабый пароль';
+        strengthText.className = 'text-danger';
+    } else if (strength <= 3) {
+        progressBar.style.width = '40%';
+        progressBar.classList.add('bg-warning');
+        strengthText.textContent = 'Слабый пароль';
+        strengthText.className = 'text-warning';
+    } else if (strength <= 4) {
+        progressBar.style.width = '60%';
+        progressBar.classList.add('bg-info');
+        strengthText.textContent = 'Средний пароль';
+        strengthText.className = 'text-info';
+    } else if (strength <= 5) {
+        progressBar.style.width = '80%';
+        progressBar.classList.add('bg-primary');
+        strengthText.textContent = 'Хороший пароль';
+        strengthText.className = 'text-primary';
+    } else {
+        progressBar.style.width = '100%';
+        progressBar.classList.add('bg-success');
+        strengthText.textContent = 'Отличный пароль!';
+        strengthText.className = 'text-success';
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.querySelector('input[name="password1"]');
+    
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+            updatePasswordStrengthUI(strength);
+        });
+    }
+});
+</script>
+{% endblock %}

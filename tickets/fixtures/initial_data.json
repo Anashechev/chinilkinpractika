@@ -1,0 +1,96 @@
+[
+  {
+    "model": "tickets.role",
+    "pk": 1,
+    "fields": {
+      "name": "CLIENT"
+    }
+  },
+  {
+    "model": "tickets.role",
+    "pk": 2,
+    "fields": {
+      "name": "DISPATCHER"
+    }
+  },
+  {
+    "model": "tickets.role",
+    "pk": 3,
+    "fields": {
+      "name": "WORKER"
+    }
+  },
+  {
+    "model": "tickets.role",
+    "pk": 4,
+    "fields": {
+      "name": "ADMIN"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 1,
+    "fields": {
+      "name": "NEW"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 2,
+    "fields": {
+      "name": "ASSIGNED"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 3,
+    "fields": {
+      "name": "IN_PROGRESS"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 4,
+    "fields": {
+      "name": "DONE"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 5,
+    "fields": {
+      "name": "READY_FOR_PICKUP"
+    }
+  },
+  {
+    "model": "tickets.ticketstatus",
+    "pk": 6,
+    "fields": {
+      "name": "CANCELED"
+    }
+  },
+  {
+    "model": "tickets.servicetype",
+    "pk": 1,
+    "fields": {
+      "name": "Repair",
+      "description": "Hardware or software repair services"
+    }
+  },
+  {
+    "model": "tickets.servicetype",
+    "pk": 2,
+    "fields": {
+      "name": "Cleaning",
+      "description": "Equipment cleaning and maintenance"
+    }
+  },
+  {
+    "model": "tickets.servicetype",
+    "pk": 3,
+    "fields": {
+      "name": "Diagnostics",
+      "description": "Equipment diagnostics and troubleshooting"
+    }
+  }
+]

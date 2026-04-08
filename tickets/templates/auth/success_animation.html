@@ -1,0 +1,349 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Успешная авторизация{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">
+            <div class="checkmark-circle">
+                <i class="bi bi-check-lg"></i>
+            </div>
+        </div>
+        
+        <div class="success-content">
+            <h2 class="success-title">Успешная авторизация!</h2>
+            <p class="success-message">Добро пожаловать, {{ user.username }}!</p>
+            <p class="success-subtitle">Перенаправляем в личный кабинет...</p>
+            
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+        
+        <div class="success-footer">
+            <div class="user-info">
+                <i class="bi bi-person-circle me-2"></i>
+                <span>{{ user.full_name }}</span>
+                <span class="badge">{{ user.role }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+html.dark-theme .success-container {
+    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+}
+
+.success-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    transform: scale(0.8) translateY(50px);
+    animation: slideUp 0.6s ease 0.3s forwards;
+}
+
+html.dark-theme .success-card {
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+}
+
+.success-icon {
+    margin-bottom: 30px;
+}
+
+.checkmark-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    animation: scaleIn 0.5s ease 0.5s forwards;
+    transform: scale(0);
+}
+
+.checkmark-circle i {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.success-title {
+    color: #212529;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease 0.7s forwards;
+}
+
+html.dark-theme .success-title {
+    color: #fff;
+}
+
+.success-message {
+    color: #495057;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease 0.8s forwards;
+}
+
+html.dark-theme .success-message {
+    color: #adb5bd;
+}
+
+.success-subtitle {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease 0.9s forwards;
+}
+
+html.dark-theme .success-subtitle {
+    color: #6c757d;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease 1s forwards;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background: #667eea;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+.dot:nth-child(3) { animation-delay: 0; }
+
+.success-footer {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease 1.1s forwards;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+html.dark-theme .user-info {
+    color: #adb5bd;
+}
+
+.user-info .badge {
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        transform: scale(0.8) translateY(50px);
+        opacity: 0;
+    }
+    to { 
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+    from { 
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .success-card {
+        margin: 20px;
+        padding: 30px 20px;
+        max-width: 90%;
+    }
+    
+    .success-title {
+        font-size: 1.5rem;
+    }
+    
+    .success-message {
+        font-size: 1rem;
+    }
+    
+    .checkmark-circle {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .checkmark-circle i {
+        font-size: 2rem;
+    }
+}
+</style>
+
+<script>
+// Предварительная загрузка голосов
+speechSynthesis.getVoices();
+
+// Автоматический переход через 2 секунды
+setTimeout(function() {
+    window.location.href = "{{ redirect_url }}";
+}, 2000);
+
+// Добавляем приятный звуковой эффект с голосовым сообщением
+function playSuccessSound() {
+    // Сначала воспроизводим приятный звуковой сигнал
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    // Создаем приятную мелодию
+    const oscillator1 = audioContext.createOscillator();
+    const oscillator2 = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator1.connect(gainNode);
+    oscillator2.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Настраиваем частоты для приятной мелодии
+    oscillator1.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+    oscillator2.frequency.setValueAtTime(659.25, audioContext.currentTime); // E5
+    
+    oscillator1.type = 'sine';
+    oscillator2.type = 'sine';
+    
+    // Плавное нарастание и затухание
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.1);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+    
+    oscillator1.start(audioContext.currentTime);
+    oscillator2.start(audioContext.currentTime);
+    oscillator1.stop(audioContext.currentTime + 0.8);
+    oscillator2.stop(audioContext.currentTime + 0.8);
+    
+    // Добавляем голосовое сообщение в стиле Яндекс Алисы
+    setTimeout(() => {
+        if ('speechSynthesis' in window) {
+            // Создаем более естественную фразу с паузой
+            const utterance = new SpeechSynthesisUtterance('Вы успешно авторизованы');
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.87; // Идеальная скорость для голоса как у Алисы
+            utterance.pitch = 1.02; // Легкое повышение тона для женского тембра
+            utterance.volume = 0.62; // Приятная громкость
+            
+            // Дополнительные параметры для естественности (если поддерживаются браузером)
+            if ('contour' in utterance) {
+                utterance.contour = [0.1, 0.2, 0.15, 0.1]; // Мелодическая интонация
+            }
+            
+            // Находим наиболее подходящий голос (похожий на Алису)
+            const voices = speechSynthesis.getVoices();
+            
+            // Приоритет голосов в порядке предпочтения для звука как Алиса
+            const preferredVoices = [
+                // Microsoft Russian voices (часто самые качественные и похожие на Алису)
+                voices.find(voice => voice.name.includes('Microsoft Irina') || voice.name.includes('Irina')),
+                voices.find(voice => voice.name.includes('Microsoft Elena') || voice.name.includes('Elena')),
+                voices.find(voice => voice.name.includes('Microsoft Daria') || voice.name.includes('Daria')),
+                voices.find(voice => voice.name.includes('Microsoft Zira') && voice.lang === 'ru-RU'),
+                // Google Russian voices (тоже хорошие)
+                voices.find(voice => voice.name.includes('Google') && voice.lang === 'ru-RU'),
+                voices.find(voice => voice.name.includes('Russian') && voice.name.includes('Female')),
+                // Apple голоса (если на Mac)
+                voices.find(voice => voice.name.includes('Milena') || voice.name.includes('Tatyana')),
+                voices.find(voice => voice.name.includes('Apple') && voice.lang === 'ru-RU'),
+                // Любой женский русский голос
+                voices.find(voice => voice.lang === 'ru-RU' && voice.name.toLowerCase().includes('female')),
+                voices.find(voice => voice.lang === 'ru-RU'),
+                // Запасной вариант
+                voices.find(voice => voice.lang.startsWith('ru')),
+                voices[0]
+            ].filter(Boolean); // Удаляем undefined значения
+            
+            const selectedVoice = preferredVoices[0];
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                console.log('Используется голос (стиль Алисы):', selectedVoice.name);
+            } else {
+                console.log('Используется голос по умолчанию');
+            }
+            
+            // Добавляем небольшую паузу перед началом речи для естественности
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 100);
+        }
+    }, 300);
+}
+
+// Воспроизводим звук при загрузке
+window.addEventListener('load', playSuccessSound);
+</script>
+{% endblock %}

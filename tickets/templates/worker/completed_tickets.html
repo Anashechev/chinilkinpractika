@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Завершенные заявки{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Завершенные заявки</h2>
+        
+        {% if tickets %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Клиент</th>
+                            <th>Техника</th>
+                            <th>Статус</th>
+                            <th>Завершена</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.id }}</td>
+                            <td>{{ ticket.title }}</td>
+                            <td>{{ ticket.client.full_name }}</td>
+                            <td>{{ ticket.equipment.model }}</td>
+                            <td>{{ ticket.current_status.get_name_display }}</td>
+                            <td>{{ ticket.completed_at|date:"d.m.Y"|default:"Н/Д" }}</td>
+                            <td>
+                                <a href="{% url 'tickets:view_ticket' ticket.id %}" class="btn btn-sm btn-info">Подробности</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Вы пока не завершили ни одной заявки.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

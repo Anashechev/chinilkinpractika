@@ -1,0 +1,95 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Типы услуг{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Типы услуг</h2>
+        
+        <!-- Форма добавления/редактирования типа услуги -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 id="form-title">{% if editing %}Редактировать{% else %}Добавить{% endif %} тип услуги</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="service-type-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="service_type_id" value="{{ editing|default:'' }}">
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        {% if editing %}Обновить{% else %}Добавить{% endif %}
+                    </button>
+                    {% if editing %}
+                        <a href="{% url 'tickets:service_types' %}" class="btn btn-secondary">Отмена</a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        
+        <!-- Список типов услуг -->
+        <h3>Существующие типы услуг</h3>
+        {% if service_types %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Описание</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service_type in service_types %}
+                        <tr>
+                            <td>{{ service_type.id }}</td>
+                            <td>{{ service_type.name }}</td>
+                            <td>{{ service_type.description|truncatewords:10 }}</td>
+                            <td>
+                                <a href="?edit={{ service_type.id }}" class="btn btn-sm btn-primary">Редактировать</a>
+                                <form method="post" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить этот тип услуги?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_id" value="{{ service_type.id }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Пока не определено ни одного типа услуг.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Если передан параметр edit, изменяем заголовок формы
+window.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('edit');
+    
+    // Проверяем, есть ли параметр edit в URL
+    if (editId) {
+        document.getElementById('form-title').textContent = 'Редактировать тип услуги';
+    }
+});
+</script>
+{% endblock %}

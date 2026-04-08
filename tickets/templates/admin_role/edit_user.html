@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Редактирование пользователя{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">
+                <h3 class="mb-0">Редактирование пользователя: {{ user.username }}</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Имя пользователя</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="full_name" class="form-label">ФИО</label>
+                        <input type="text" class="form-control" id="full_name" name="full_name" value="{{ user.full_name }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Контактная информация</label>
+                        <input type="text" class="form-control" id="contact" name="contact" value="{{ user.contact }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Роль</label>
+                        <select class="form-select" id="role" name="role" required>
+                            {% for role in roles %}
+                                <option value="{{ role.id }}" {% if role.id == user.role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    {% if user.role.name != 'ADMIN' %}
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Новый пароль (оставьте пустым, чтобы не менять)</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="is_active" name="is_active" {% if user.is_active %}checked{% endif %} {% if user.role.name == 'ADMIN' %}disabled{% endif %}>
+                        <label class="form-check-label" for="is_active">Активен</label>
+                        {% if user.role.name == 'ADMIN' %}
+                            <small class="form-text text-muted">Администраторы всегда активны</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'tickets:manage_users' %}" class="btn btn-secondary me-md-2">Отмена</a>
+                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

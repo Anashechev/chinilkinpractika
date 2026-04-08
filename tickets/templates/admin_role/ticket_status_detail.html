@@ -1,0 +1,52 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Заявки со статусом {{ status.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Заявки со статусом "{{ status.get_name_display }}"</h2>
+        
+        <div class="mb-3">
+            <a href="{% url 'tickets:ticket_statuses' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Назад к списку статусов
+            </a>
+        </div>
+        
+        {% if tickets %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Клиент</th>
+                            <th>Техника</th>
+                            <th>Создана</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td>{{ ticket.id }}</td>
+                            <td>{{ ticket.title }}</td>
+                            <td>{{ ticket.client.full_name }}</td>
+                            <td>{{ ticket.equipment.model }}</td>
+                            <td>{{ ticket.created_at|date:"d.m.Y" }}</td>
+                            <td>
+                                <a href="{% url 'tickets:view_ticket' ticket.id %}" class="btn btn-sm btn-info">Просмотр</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Нет заявок со статусом "{{ status.get_name_display }}".
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

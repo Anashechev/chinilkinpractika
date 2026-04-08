@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Профессиональная система управления заявками на обслуживание техники">
+    <title>{% block title %}Система обслуживания и учёта техники{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Preload theme to prevent flash -->
+    <script>
+        // Apply theme immediately to prevent flash
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = savedTheme || 'light';
+            
+            // Apply theme to html element
+            document.documentElement.classList.add(initialTheme + '-theme');
+        })();
+    </script>
+    
+    <style>
+        /* Light theme styles */
+        html.light-theme {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        
+        html.light-theme body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        
+        html.light-theme .navbar {
+            background-color: #343a40 !important;
+        }
+        
+        html.light-theme .navbar-brand,
+        html.light-theme .nav-link,
+        html.light-theme .navbar-text {
+            color: #f8f9fa !important;
+        }
+        
+        html.light-theme .card {
+            background-color: #ffffff;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+        
+        html.light-theme .card-header {
+            background-color: rgba(0, 0, 0, 0.03);
+            border-bottom-color: #dee2e6;
+            color: #212529;
+        }
+        
+        html.light-theme .form-control, 
+        html.light-theme .form-select {
+            background-color: #ffffff;
+            color: #212529;
+            border-color: #ced4da;
+        }
+        
+        html.light-theme .form-control:focus, 
+        html.light-theme .form-select:focus {
+            background-color: #ffffff;
+            color: #212529;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        html.light-theme .table {
+            color: #212529;
+            border-color: #dee2e6;
+        }
+        
+        html.light-theme .table > :not(caption) > * > * {
+            background-color: transparent;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+        
+        html.light-theme .btn-close {
+            filter: none;
+        }
+        
+        html.light-theme .dropdown-menu {
+            background-color: #ffffff;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+        
+        html.light-theme .dropdown-item {
+            color: #212529;
+        }
+        
+        html.light-theme .dropdown-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        html.light-theme .alert {
+            background-color: #ffffff;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+        
+        html.light-theme footer {
+            background-color: #ffffff;
+            color: #212529;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        /* Dark theme styles */
+        html.dark-theme {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme body {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .navbar {
+            background-color: #212529 !important;
+        }
+        
+        html.dark-theme .navbar-brand,
+        html.dark-theme .nav-link,
+        html.dark-theme .navbar-text {
+            color: #f8f9fa !important;
+        }
+        
+        html.dark-theme .card {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .card-header {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-bottom-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .form-control, 
+        html.dark-theme .form-select {
+            background-color: #343a40;
+            color: #f8f9fa;
+            border-color: #495057;
+        }
+        
+        html.dark-theme .form-control:focus, 
+        html.dark-theme .form-select:focus {
+            background-color: #343a40;
+            color: #f8f9fa;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        
+        html.dark-theme .form-control::placeholder {
+            color: #adb5bd;
+        }
+        
+        html.dark-theme .table {
+            color: #f8f9fa;
+            border-color: #495057;
+        }
+        
+        html.dark-theme .table > :not(caption) > * > * {
+            background-color: transparent;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .table-striped > tbody > tr:nth-of-type(odd) > * {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        html.dark-theme .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        html.dark-theme .dropdown-menu {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .dropdown-item {
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        html.dark-theme .alert {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        html.dark-theme footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            border-top: 1px solid #495057;
+        }
+        
+        /* List group items */
+        html.dark-theme .list-group-item {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+        
+        /* Fix for bg-light in dark theme */
+        html.dark-theme .bg-light {
+            background-color: #495057 !important;
+            color: #f8f9fa !important;
+        }
+        
+        /* Fix for buttons in dark theme */
+        html.dark-theme .btn-outline-primary {
+            color: #0d6efd !important;
+            border-color: #0d6efd !important;
+        }
+        
+        html.dark-theme .btn-outline-primary:hover {
+            background-color: #0d6efd !important;
+            color: white !important;
+        }
+        
+        /* Common styles */
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                max-width: 100%;
+            }
+            
+            .card {
+                margin: 10px 0;
+                border-radius: 10px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+            
+            .navbar-brand {
+                font-size: 18px;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                font-size: 1.5rem;
+            }
+            
+            .table-responsive {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            
+            .btn-lg {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                font-size: 1.25rem;
+            }
+        }
+        
+        /* Ensure all text elements use theme colors */
+        html.light-theme h1, html.light-theme h2, html.light-theme h3, html.light-theme h4, html.light-theme h5, html.light-theme h6,
+        html.light-theme p, html.light-theme span, html.light-theme div, html.light-theme a, html.light-theme li, 
+        html.light-theme td, html.light-theme th, html.light-theme label, html.light-theme small, html.light-theme strong, html.light-theme em,
+        html.light-theme .card-text, html.light-theme .card-title, html.light-theme .card-subtitle {
+            color: #212529;
+        }
+        
+        html.dark-theme h1, html.dark-theme h2, html.dark-theme h3, html.dark-theme h4, html.dark-theme h5, html.dark-theme h6,
+        html.dark-theme p, html.dark-theme span, html.dark-theme div, html.dark-theme a, html.dark-theme li, 
+        html.dark-theme td, html.dark-theme th, html.dark-theme label, html.dark-theme small, html.dark-theme strong, html.dark-theme em,
+        html.dark-theme .card-text, html.dark-theme .card-title, html.dark-theme .card-subtitle {
+            color: #f8f9fa;
+        }
+        
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #28a745; /* Green instead of blue */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Main content wrapper */
+        .main-content {
+            flex: 1;
+        }
+        
+        /* Links - change blue to more visible color */
+        html.light-theme a {
+            color: #0d6efd; /* Modern teal blue */
+        }
+        
+        html.light-theme a:hover {
+            color: #0a8c32;
+        }
+        
+        html.dark-theme a {
+            color: #0d6efd; /* Modern teal blue */
+        }
+        
+        html.dark-theme a:hover {
+            color: #0a8c32;
+        }
+        
+        /* Buttons - ensure white text on colored buttons */
+        .btn-primary,
+        .btn-secondary,
+        .btn-success,
+        .btn-danger,
+        .btn-warning,
+        .btn-info {
+            color: white !important;
+        }
+        
+        .btn-primary:hover,
+        .btn-secondary:hover,
+        .btn-success:hover,
+        .btn-danger:hover,
+        .btn-warning:hover,
+        .btn-info:hover {
+            color: white !important;
+        }
+        
+        /* Specific button colors */
+        .btn-primary {
+            background-color: #0d6efd !important; /* Modern teal blue */
+            border-color: #0d6efd !important;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0a8c32 !important;
+            border-color: #0a8c32 !important;
+        }
+        
+        .btn-outline-primary {
+            color: #0d6efd !important;
+            border-color: #0d6efd !important;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: white !important;
+        }
+        
+        /* Form elements */
+        html.light-theme .form-label {
+            color: #212529;
+        }
+        
+        html.dark-theme .form-label {
+            color: #f8f9fa;
+        }
+        
+        /* Text muted */
+        html.light-theme .text-muted {
+            color: #6c757d !important;
+        }
+        
+        html.dark-theme .text-muted {
+            color: #adb5bd !important;
+        }
+        
+        /* Badges */
+        html.light-theme .badge {
+            color: white;
+        }
+        
+        html.dark-theme .badge {
+            color: white;
+        }
+        
+        /* Info elements - change blue to teal */
+        html.light-theme .text-info,
+        html.light-theme .btn-info,
+        html.light-theme .alert-info,
+        html.light-theme .bg-info {
+            color: #20c997 !important;
+            background-color: rgba(32, 201, 151, 0.1) !important;
+            border-color: rgba(32, 201, 151, 0.2) !important;
+        }
+        
+        html.dark-theme .text-info,
+        html.dark-theme .btn-info,
+        html.dark-theme .alert-info,
+        html.dark-theme .bg-info {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        html body,
+        html .navbar,
+        html .card,
+        html .card-header,
+        html .form-control,
+        html .form-select,
+        html .table,
+        html .table > :not(caption) > * > *,
+        html .dropdown-menu,
+        html .alert,
+        html .list-group-item,
+        html .bg-light,
+        html .btn-outline-primary,
+        html footer,
+        html h1, html h2, html h3, html h4, html h5, html h6,
+        html p, html span, html div, html a, html li, 
+        html td, html th, html label, html small, html strong, html em,
+        html .card-text, html .card-title, html .card-subtitle,
+        html .form-label,
+        html .text-muted,
+        html .badge,
+        html .text-info,
+        html .btn-info,
+        html .alert-info,
+        html .bg-info,
+        html .text-primary,
+        html .alert-primary,
+        html .bg-primary {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Password strength indicator styles */
+        .password-strength .progress {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .password-strength .progress-bar {
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .password-requirements div {
+            margin-bottom: 2px;
+            transition: color 0.3s ease;
+        }
+        
+        .password-requirements i {
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Smooth animations for password strength */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .password-strength .progress-bar.bg-danger {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Modern design improvements */
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            border: none;
+            border-radius: 15px 15px 0 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        html.light-theme .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        html.dark-theme .card-header {
+            background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        }
+        
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 12px 24px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            padding: 12px 16px;
+        }
+        
+        html.light-theme .form-control, 
+        html.light-theme .form-select {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #e0e0e0;
+        }
+        
+        html.dark-theme .form-control, 
+        html.dark-theme .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #444;
+            color: #fff;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+        
+        .navbar {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9) !important;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alert {
+            border: none;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+        }
+        
+        .theme-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+        
+        /* Smooth animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* Footer improvements */
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            margin-top: 50px;
+            padding: 30px 0;
+        }
+        
+        html.dark-theme footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        /* Notification badge */
+        .notification-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            min-width: 20px;
+            height: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 2px solid #212529;
+        }
+        
+        /* Notification link styling */
+        .notification-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        .notification-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px !important;
+            border-radius: 25px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            transition: all 0.3s ease !important;
+            font-weight: 500 !important;
+        }
+        
+        .notification-link:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .notification-link i {
+            font-size: 16px;
+            margin-right: 6px;
+            transition: transform 0.3s ease;
+        }
+        
+        .notification-link:hover i {
+            transform: rotate(15deg);
+        }
+        
+        /* Dark theme specific styles for notification link */
+        html.dark-theme .notification-link {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            color: #f8f9fa !important;
+        }
+        
+        html.dark-theme .notification-link:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        html.dark-theme .notification-badge {
+            border-color: #212529;
+        }
+        
+        /* Light theme specific styles for notification link */
+        html.light-theme .notification-link {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border-color: rgba(0, 0, 0, 0.1) !important;
+            color: #212529 !important;
+        }
+        
+        html.light-theme .notification-link:hover {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border-color: rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        html.light-theme .notification-badge {
+            border-color: #f8f9fa;
+        }
+        
+        /* Feature items styling */
+        .feature-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+        }
+        
+        .feature-item i {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover i {
+            transform: scale(1.1);
+            color: #667eea !important;
+        }
+        
+        .feature-item span {
+            color: #495057;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        
+        .feature-item:hover span {
+            color: #212529;
+        }
+        
+        /* Dark theme styles for feature items */
+        html.dark-theme .feature-item {
+            background: linear-gradient(135deg, #343a40 0%, #2c3e50 100%);
+            border-color: #495057;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        html.dark-theme .feature-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #343a40 0%, #3a4250 100%);
+        }
+        
+        html.dark-theme .feature-item i {
+            color: #28a745;
+        }
+        
+        html.dark-theme .feature-item:hover i {
+            color: #667eea !important;
+        }
+        
+        html.dark-theme .feature-item span {
+            color: #adb5bd;
+        }
+        
+        html.dark-theme .feature-item:hover span {
+            color: #f8f9fa;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: visible;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            flex-shrink: 0;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon i {
+            transform: rotate(-5deg);
+        }
+        
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #212529;
+            transition: color 0.3s ease;
+            text-align: center;
+            line-height: 1.3;
+            flex-shrink: 0;
+        }
+        
+        .feature-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            line-height: 1.4;
+            margin: 0;
+            transition: color 0.3s ease;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-card:hover .feature-description {
+            color: #495057;
+        }
+        
+        /* Dark theme styles for feature cards */
+        html.dark-theme .feature-card {
+            background: linear-gradient(135deg, #343a40 0%, #2c3e50 100%);
+            border-color: #495057;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        html.dark-theme .feature-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        html.dark-theme .feature-item {
+            border-color: #495057;
+        }
+        
+        html.dark-theme .feature-item:hover {
+            background-color: rgba(102, 126, 234, 0.15);
+        }
+        
+        html.dark-theme .feature-icon {
+            color: #28a745;
+        }
+        
+        html.dark-theme .feature-item:hover .feature-icon {
+            color: #667eea;
+        }
+        
+        html.dark-theme .feature-text {
+            color: #adb5bd;
+        }
+        
+        html.dark-theme .feature-card:hover .feature-text {
+            color: #f8f9fa;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+        }
+        
+        /* Fix for home page buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white !important;
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid #667eea !important;
+            color: #667eea !important;
+            background: transparent !important;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border-color: #667eea !important;
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        html.dark-theme .btn-outline-primary {
+            border-color: #667eea !important;
+            color: #667eea !important;
+        }
+        
+        html.dark-theme .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border-color: #667eea !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Система обслуживания и учёта техники</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <div class="notification-container">
+                            <a class="nav-link notification-link" href="{% url 'tickets:notifications' %}">
+                                <i class="bi bi-bell-fill me-1"></i>
+                                <span>Уведомления</span>
+                                {% if unread_count and unread_count > 0 %}
+                                    <span class="notification-badge">{{ unread_count }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <span class="navbar-text me-3">Здравствуйте, {{ user.username }} ({{ user.role }})</span>
+                        <a class="nav-link" href="{% url 'tickets:logout' %}">Выйти</a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'tickets:login' %}">Войти</a>
+                        <a class="nav-link" href="{% url 'tickets:register' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="container mt-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p class="text-center">&copy; 2026 Система обслуживания и учёта техники. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="bi bi-moon-fill" id="themeIcon"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Apply theme on page load (in case preload script didn't run)
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const osPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const initialTheme = savedTheme || 'light';
+            
+            // Apply theme to html element
+            document.documentElement.className = initialTheme + '-theme';
+            
+            // Set icon based on theme
+            if (initialTheme === 'dark') {
+                document.getElementById('themeIcon').classList.remove('bi-moon-fill');
+                document.getElementById('themeIcon').classList.add('bi-sun-fill');
+            }
+        })();
+        
+        // Theme toggle functionality
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const isDark = document.documentElement.classList.contains('dark-theme');
+            
+            if (isDark) {
+                document.documentElement.className = 'light-theme';
+                document.getElementById('themeIcon').classList.remove('bi-sun-fill');
+                document.getElementById('themeIcon').classList.add('bi-moon-fill');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.className = 'dark-theme';
+                document.getElementById('themeIcon').classList.remove('bi-moon-fill');
+                document.getElementById('themeIcon').classList.add('bi-sun-fill');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

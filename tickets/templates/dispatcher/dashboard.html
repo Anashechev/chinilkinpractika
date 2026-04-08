@@ -1,0 +1,124 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Панель диспетчера{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Панель диспетчера</h2>
+        <p class="lead">Добро пожаловать, {{ user.full_name }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Новые заявки</h5>
+                <p class="card-text flex-grow-1">Просмотр и распределение новых заявок.</p>
+                <a href="{% url 'tickets:new_tickets' %}" class="btn btn-primary mt-auto">Просмотр новых заявок</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Все заявки</h5>
+                <p class="card-text flex-grow-1">Просмотр всех заявок в системе.</p>
+                <a href="{% url 'tickets:all_tickets' %}" class="btn btn-success mt-auto">Просмотр всех заявок</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Отчеты</h5>
+                <p class="card-text flex-grow-1">Создание и просмотр отчетов.</p>
+                <a href="{% url 'tickets:reports' %}" class="btn btn-info mt-auto">Просмотр отчетов</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Статистика заявок</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center p-2 bg-primary text-white rounded">
+                            <h4>{{ total_tickets }}</h4>
+                            <p class="mb-0">Всего</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-2 bg-warning text-dark rounded">
+                            <h4>{{ pending_tickets }}</h4>
+                            <p class="mb-0">Новые</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-2 bg-info text-white rounded">
+                            <h4>{{ assigned_tickets }}</h4>
+                            <p class="mb-0">Назначено</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-2 bg-success text-white rounded">
+                            <h4>{{ completed_tickets }}</h4>
+                            <p class="mb-0">Завершено</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Последние заявки</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Заголовок</th>
+                                <th>Клиент</th>
+                                <th>Статус</th>
+                                <th>Дата создания</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in recent_tickets %}
+                            <tr>
+                                <td>{{ ticket.id }}</td>
+                                <td>{{ ticket.title }}</td>
+                                <td>{{ ticket.client.full_name }}</td>
+                                <td>
+                                    <span class="badge bg-{% if ticket.current_status.name == 'NEW' %}primary{% elif ticket.current_status.name == 'ASSIGNED' %}warning{% elif ticket.current_status.name == 'IN_PROGRESS' %}info{% elif ticket.current_status.name == 'COMPLETED' %}success{% else %}secondary{% endif %}">
+                                        {{ ticket.current_status.name }}
+                                    </span>
+                                </td>
+                                <td>{{ ticket.created_at|date:"d.m.Y H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Нет заявок</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

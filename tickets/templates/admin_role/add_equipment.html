@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{% if equipment %}Редактировать оборудование{% else %}Добавить оборудование{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>{% if equipment %}Редактировать оборудование{% else %}Добавить новое оборудование{% endif %}</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.type.id_for_label }}" class="form-label">{{ form.type.label }}</label>
+                {{ form.type }}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.model.id_for_label }}" class="form-label">{{ form.model.label }}</label>
+                {{ form.model }}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.serial_number.id_for_label }}" class="form-label">{{ form.serial_number.label }}</label>
+                {{ form.serial_number }}
+                <div class="form-text">Если оставить пустым, будет сгенерирован уникальный 12-значный серийный номер</div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.notes.id_for_label }}" class="form-label">{{ form.notes.label }}</label>
+                {{ form.notes }}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">{% if equipment %}Сохранить изменения{% else %}Добавить оборудование{% endif %}</button>
+            <a href="{% url 'tickets:admin_equipment_list' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

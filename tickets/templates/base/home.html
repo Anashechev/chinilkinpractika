@@ -1,0 +1,169 @@
+{% extends 'base/base.html' %}
+
+
+
+{% block title %}Главная страница{% endblock %}
+
+
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8 col-xl-6">
+
+        <div class="card shadow-lg border-0">
+
+            <div class="card-header text-center py-4">
+
+                <div class="mb-3">
+
+                    <i class="bi bi-tools" style="font-size: 3rem; color: white;"></i>
+
+                </div>
+
+                <h1 class="mb-3">Система обслуживания и учёта техники</h1>
+
+                <p class="lead mb-0">Профессиональное управление заявками на обслуживание</p>
+
+            </div>
+
+            <div class="card-body p-5">
+
+                {% if user.is_authenticated %}
+
+                    <div class="text-center">
+
+                        <div class="mb-4">
+
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle p-3 mb-3">
+
+                                <i class="bi bi-person-circle" style="font-size: 2rem; color: #667eea;"></i>
+
+                            </div>
+
+                            <h4 class="mb-2">Добро пожаловать!</h4>
+
+                            <p class="text-muted mb-3">Вы вошли как <strong>{{ user.username }}</strong></p>
+
+                            <p class="text-muted mb-4">Роль: <span class="badge bg-primary">{{ user.role }}</span></p>
+
+                        </div>
+
+                        
+
+                        <div class="d-grid gap-3">
+
+                            <a href="{% url 'tickets:client_dashboard' %}" class="btn btn-primary btn-lg">
+
+                                <i class="bi bi-speedometer2 me-2"></i>
+
+                                Перейти в личный кабинет
+
+                            </a>
+
+                            <a href="{% url 'tickets:create' %}" class="btn btn-outline-primary btn-lg">
+
+                                <i class="bi bi-plus-circle me-2"></i>
+
+                                Создать заявку
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="text-center">
+
+                        <div class="mb-4">
+
+                            <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle p-3 mb-3">
+
+                                <i class="bi bi-shield-lock" style="font-size: 2rem; color: #667eea;"></i>
+
+                            </div>
+
+                            <h4 class="mb-3">Добро пожаловать!</h4>
+
+                            <p class="text-muted mb-4">Для начала работы необходимо авторизоваться или зарегистрироваться</p>
+
+                        </div>
+
+                        
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <a href="{% url 'tickets:login' %}" class="btn btn-primary btn-lg w-100">
+
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>
+
+                                    Войти
+
+                                </a>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <a href="{% url 'tickets:register' %}" class="btn btn-outline-primary btn-lg w-100">
+
+                                    <i class="bi bi-person-plus me-2"></i>
+
+                                    Регистрация
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        
+
+                        <div class="mt-5 pt-4">
+                            <h3 class="text-center mb-4">Возможности системы</h3>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <span>Создание заявок на обслуживание</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <span>Отслеживание статуса заявок</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <span>Управление техникой</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="feature-item">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        <span>Уведомления о статусах</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+django==5.2
+mysqlclient
+pillow
+python-decouple
+psutil==5.9.8

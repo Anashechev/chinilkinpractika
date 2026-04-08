@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Резервное копирование и восстановление БД{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Резервное копирование и восстановление базы данных</h2>
+        <p class="lead">На этой странице вы можете создать резервную копию базы данных или восстановить её из ранее созданной копии.</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Создать резервную копию</h5>
+            </div>
+            <div class="card-body">
+                <p>Создайте полную резервную копию текущей базы данных. Файл будет автоматически загружен на ваше устройство.</p>
+                <form method="post" action="{% url 'tickets:backup_database' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Вы уверены, что хотите создать резервную копию базы данных?')">Создать и скачать резервную копию</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Восстановить из резервной копии</h5>
+            </div>
+            <div class="card-body">
+                <p>Восстановите базу данных из загруженного файла резервной копии.</p>
+                <p class="text-danger"><strong>Внимание:</strong> При восстановлении текущая база данных будет заменена. Перед восстановлением старая база данных будет скачана на ваше устройство с именем файла olddb_*.sqlite3.</p>
+                <form method="post" action="{% url 'tickets:restore_database' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="backup_file" class="form-label">Файл резервной копии</label>
+                        <input type="file" class="form-control" id="backup_file" name="backup_file" accept=".sqlite3" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите восстановить базу данных? Это заменит текущую базу данных. Старая база данных будет скачана на ваше устройство перед восстановлением.')">Восстановить базу данных</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Информация о резервном копировании</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Резервные копии загружаются прямо на ваше устройство</li>
+                    <li>Перед восстановлением старая база данных скачивается на ваше устройство с именем файла <code>olddb_*.sqlite3</code></li>
+                    <li>Формат файлов резервных копий: <code>db_backup_YYYYMMDD_HHMMSS.sqlite3</code></li>
+                    <li>При восстановлении используйте только файлы резервных копий, созданные этой системой</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

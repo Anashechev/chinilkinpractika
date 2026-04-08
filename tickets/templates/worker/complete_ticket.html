@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Завершить заявку{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Завершить заявку #{{ ticket.id }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Информация о заявке</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Название:</strong> {{ ticket.title }}</p>
+                <p><strong>Описание:</strong> {{ ticket.description }}</p>
+                <p><strong>Клиент:</strong> {{ ticket.client.full_name }}</p>
+                <p><strong>Техника:</strong> {{ ticket.equipment.get_type_display }} - {{ ticket.equipment.model }}</p>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="alert alert-warning">
+                <p>Вы уверены, что хотите завершить эту заявку?</p>
+            </div>
+            <button type="submit" class="btn btn-success">Завершить заявку</button>
+            <a href="{% url 'tickets:in_progress_tickets' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,276 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Системные отчеты{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Системные отчеты</h2>
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-primary" onclick="downloadPDF()">
+                <i class="bi bi-file-earmark-pdf"></i> Скачать PDF
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Статистика пользователей</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-primary text-white rounded">
+                            <h3>{{ total_users }}</h3>
+                            <p>Всего пользователей</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-success text-white rounded">
+                            <h3>{{ clients }}</h3>
+                            <p>Клиенты</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-info text-white rounded">
+                            <h3>{{ dispatchers }}</h3>
+                            <p>Диспетчеры</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-warning text-dark rounded">
+                            <h3>{{ workers }}</h3>
+                            <p>Работники</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-danger text-white rounded">
+                            <h3>{{ admins }}</h3>
+                            <p>Администраторы</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-secondary text-white rounded">
+                            <h3>{{ total_tickets }}</h3>
+                            <p>Всего заявок</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Статусы заявок</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-primary text-white rounded">
+                            <h3>{{ new_tickets }}</h3>
+                            <p>Новые</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-warning text-dark rounded">
+                            <h3>{{ assigned_tickets }}</h3>
+                            <p>Назначенные</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-info text-white rounded">
+                            <h3>{{ in_progress_tickets }}</h3>
+                            <p>В работе</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-success text-white rounded">
+                            <h3>{{ completed_tickets }}</h3>
+                            <p>Завершено</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="text-center p-3 bg-secondary text-white rounded">
+                            <h3>{{ cancelled_tickets }}</h3>
+                            <p>Отменено</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">График активности (последние 12 месяцев)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="activityChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Parse chart data from backend
+    const chartData = JSON.parse('{{ chart_data|escapejs }}');
+    
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    const activityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: chartData.labels,
+            datasets: [{
+                label: 'Новые заявки',
+                data: chartData.new_tickets,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1,
+                fill: false
+            }, {
+                label: 'Завершенные заявки',
+                data: chartData.completed_tickets,
+                borderColor: 'rgb(54, 162, 235)',
+                tension: 0.1,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    // Function to download report as PDF
+    function downloadPDF() {
+        // Create a new window with printable content
+        const printWindow = window.open('', '_blank');
+        const content = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Системные отчеты</title>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .header { text-align: center; margin-bottom: 30px; }
+                .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+                .stat-card { border: 1px solid #ddd; padding: 15px; text-align: center; }
+                .stat-value { font-size: 24px; font-weight: bold; }
+                .stat-label { font-size: 14px; color: #666; }
+                .section { margin-bottom: 30px; }
+                .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Системные отчеты</h1>
+                <p>Дата формирования: ${new Date().toLocaleDateString('ru-RU')}</p>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Статистика пользователей</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-primary h3').textContent}</div>
+                        <div class="stat-label">Всего пользователей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-success h3').textContent}</div>
+                        <div class="stat-label">Клиенты</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-info h3').textContent}</div>
+                        <div class="stat-label">Диспетчеры</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-warning h3').textContent}</div>
+                        <div class="stat-label">Работники</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-danger h3').textContent}</div>
+                        <div class="stat-label">Администраторы</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelector('.bg-secondary h3').textContent}</div>
+                        <div class="stat-label">Всего заявок</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Статусы заявок</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelectorAll('.card-body .row .col-md-2 .p-3')[5].querySelector('h3').textContent}</div>
+                        <div class="stat-label">Новые</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelectorAll('.card-body .row .col-md-2 .p-3')[6].querySelector('h3').textContent}</div>
+                        <div class="stat-label">Назначенные</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelectorAll('.card-body .row .col-md-2 .p-3')[7].querySelector('h3').textContent}</div>
+                        <div class="stat-label">В работе</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelectorAll('.card-body .row .col-md-2 .p-3')[8].querySelector('h3').textContent}</div>
+                        <div class="stat-label">Завершено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${document.querySelectorAll('.card-body .row .col-md-2 .p-3')[9].querySelector('h3').textContent}</div>
+                        <div class="stat-label">Отменено</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">График активности</div>
+                <p>Данные за последние 12 месяцев:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Месяц</th>
+                            <th>Новые заявки</th>
+                            <th>Завершенные заявки</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${chartData.labels.map((label, index) => `
+                            <tr>
+                                <td>${label}</td>
+                                <td>${chartData.new_tickets[index]}</td>
+                                <td>${chartData.completed_tickets[index]}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </body>
+        </html>
+        `;
+        
+        printWindow.document.write(content);
+        printWindow.document.close();
+        printWindow.print();
+    }
+</script>
+{% endblock %}

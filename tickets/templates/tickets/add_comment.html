@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Добавить комментарий к заявке #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Добавить комментарий к заявке #{{ ticket.id }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Информация о заявке</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Название:</strong> {{ ticket.title }}</p>
+                <p><strong>Статус:</strong> 
+                    <span class="badge bg-{% if ticket.current_status.name == 'NEW' %}primary{% elif ticket.current_status.name == 'ASSIGNED' %}warning{% elif ticket.current_status.name == 'IN_PROGRESS' %}info{% elif ticket.current_status.name == 'DONE' %}success{% elif ticket.current_status.name == 'READY_FOR_PICKUP' %}secondary{% else %}secondary{% endif %}">
+                        {{ ticket.current_status.name }}
+                    </span>
+                </p>
+                <p><strong>Клиент:</strong> {{ ticket.client.full_name }}</p>
+                <p><strong>Техника:</strong> {{ ticket.equipment.get_type_display }} - {{ ticket.equipment.model }}</p>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="comment" class="form-label">Комментарий</label>
+                <textarea class="form-control" id="comment" name="comment" rows="5" placeholder="Введите ваш комментарий..." required></textarea>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-chat-square-text"></i> Добавить комментарий
+                </button>
+                <a href="{% url 'tickets:view_ticket' ticket.id %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Отмена
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Заявка #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Заявка #{{ ticket.id }}: {{ ticket.title }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Основная информация</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Статус:</strong> 
+                            <span class="badge bg-{% if ticket.current_status.name == 'NEW' %}primary{% elif ticket.current_status.name == 'ASSIGNED' %}warning{% elif ticket.current_status.name == 'IN_PROGRESS' %}info{% elif ticket.current_status.name == 'DONE' %}success{% elif ticket.current_status.name == 'READY_FOR_PICKUP' %}secondary{% else %}secondary{% endif %}">
+                                {{ ticket.current_status.get_name_display }}
+                            </span>
+                        </p>
+                        <p><strong>Клиент:</strong> {{ ticket.client.full_name }}</p>
+                        <p><strong>Контакт клиента:</strong> {{ ticket.client.contact }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Техника:</strong> {{ ticket.equipment.get_type_display }} - {{ ticket.equipment.model }}</p>
+                        <p><strong>Серийный номер:</strong> {{ ticket.equipment.serial_number }}</p>
+                        {% if ticket.service_type %}
+                        <p><strong>Тип услуги:</strong> {{ ticket.service_type.name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <p><strong>Описание:</strong></p>
+                        <div class="border p-3 rounded">
+                            {{ ticket.description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if ticket.assignee %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Информация о работнике</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Назначен:</strong> {{ ticket.assignee.full_name }}</p>
+                {% if ticket.dispatcher %}
+                <p><strong>Диспетчер:</strong> {{ ticket.dispatcher.full_name }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>История изменений</h5>
+            </div>
+            <div class="card-body">
+                {% if status_history %}
+                <div class="timeline">
+                    {% for history in status_history %}
+                    <div class="timeline-item mb-3">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="bi bi-circle-fill text-primary"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 class="mb-1">
+                                    {% if history.old_status != history.new_status %}
+                                        Статус изменен с "{{ history.old_status.get_name_display }}" на "{{ history.new_status.get_name_display }}"
+                                    {% else %}
+                                        Комментарий добавлен
+                                    {% endif %}
+                                </h6>
+                                <p class="mb-1">{{ history.changed_by.full_name }} - {{ history.changed_at|date:"d.m.Y H:i" }}</p>
+                                {% if history.comment %}
+                                <div class="alert alert-light border">
+                                    {{ history.comment }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>История изменений пуста</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'tickets:add_comment' ticket.id %}" class="btn btn-primary">
+                <i class="bi bi-chat-square-text"></i> Добавить комментарий
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Назад
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

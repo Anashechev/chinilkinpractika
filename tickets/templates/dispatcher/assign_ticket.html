@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Назначить заявку{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Назначить заявку #{{ ticket.id }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Информация о заявке</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Название:</strong> {{ ticket.title }}</p>
+                <p><strong>Описание:</strong> {{ ticket.description }}</p>
+                <p><strong>Клиент:</strong> {{ ticket.client.full_name }}</p>
+                <p><strong>Техника:</strong> {{ ticket.equipment.get_type_display }} - {{ ticket.equipment.model }}</p>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="worker" class="form-label">Назначить работнику</label>
+                <select class="form-select" id="worker" name="worker" required>
+                    <option value="">Выберите работника</option>
+                    {% for worker in workers %}
+                        <option value="{{ worker.id }}">{{ worker.full_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Назначить заявку</button>
+            <a href="{% url 'tickets:new_tickets' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

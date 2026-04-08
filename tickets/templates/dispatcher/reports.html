@@ -1,0 +1,98 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Отчеты{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Отчеты</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Статистика заявок</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-primary text-white rounded">
+                            <h3>{{ total_tickets }}</h3>
+                            <p>Всего заявок</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-warning text-dark rounded">
+                            <h3>{{ pending_tickets }}</h3>
+                            <p>Новые заявки</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-info text-white rounded">
+                            <h3>{{ in_progress_tickets }}</h3>
+                            <p>В работе</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center p-3 bg-success text-white rounded">
+                            <h3>{{ completed_tickets }}</h3>
+                            <p>Завершено</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0">Отчеты по работникам</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Работник</th>
+                                <th>Назначено</th>
+                                <th>В работе</th>
+                                <th>Завершено</th>
+                                <th>Эффективность</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for worker in workers_stats %}
+                            <tr>
+                                <td>{{ worker.name }}</td>
+                                <td>{{ worker.assigned }}</td>
+                                <td>{{ worker.in_progress }}</td>
+                                <td>{{ worker.completed }}</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" 
+                                             aria-valuenow="{{ worker.completed }}" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="{{ worker.assigned }}">
+                                            {% widthratio worker.completed worker.assigned 100 %}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Нет данных</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

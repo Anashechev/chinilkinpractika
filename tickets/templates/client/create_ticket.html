@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Создать заявку{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Создать новую заявку</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Заголовок</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="equipment" class="form-label">Техника</label>
+                <select class="form-select" id="equipment" name="equipment" required>
+                    <option value="">Выберите технику</option>
+                    {% for equipment in equipment_list %}
+                        <option value="{{ equipment.id }}">{{ equipment.type }} - {{ equipment.model }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-text">
+                    У вас нет нужной техники? 
+                    <a href="{% url 'tickets:equipment_list' %}">Привяжите существующую технику</a>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="service_type" class="form-label">Тип услуги (опционально)</label>
+                <select class="form-select" id="service_type" name="service_type">
+                    <option value="">Выберите тип услуги</option>
+                    {% for service_type in service_types %}
+                        <option value="{{ service_type.id }}">{{ service_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <label for="description" class="form-label">Описание проблемы</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Создать заявку</button>
+            <a href="{% url 'tickets:client_tickets' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

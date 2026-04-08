@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - ALLOWED_HOSTS=*
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=465
+      - EMAIL_USE_TLS=False
+      - EMAIL_USE_SSL=True
+      - EMAIL_HOST_USER=anashechev@gmail.com
+      - EMAIL_HOST_PASSWORD=nhwnygyutqgaitqm
+      - DEFAULT_FROM_EMAIL=anashechev@gmail.com
+      - EMAIL_TIMEOUT=30
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+    
+  # Опционально: MySQL база данных
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: chinilkin_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: django
+      MYSQL_PASSWORD: djangopassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
